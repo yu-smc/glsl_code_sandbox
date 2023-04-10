@@ -1,0 +1,25 @@
+{
+  "name": "glsl_code_sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "browser-sync  start --server \"./\" --watch --files main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yu-smc/glsl_code_sandbox.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yu-smc/glsl_code_sandbox/issues"
+  },
+  "homepage": "https://github.com/yu-smc/glsl_code_sandbox#readme",
+  "dependencies": {
+    "browser-sync": "^2.29.1",
+    "three": "^0.151.3"
+  }
+}
