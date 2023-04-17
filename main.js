@@ -157,8 +157,8 @@ window.onload = function () {
   c = document.getElementById("canvas");
 
   // canvas サイズ
-  cw = 512;
-  ch = 512;
+  cw = 480;
+  ch = 640;
   c.width = cw;
   c.height = ch;
 
