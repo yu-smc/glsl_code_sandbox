@@ -13,7 +13,7 @@
     vec2 uv = gl_FragCoord.xy/resolution.xy;
     uv=vec2(2.1,.5)+(uv-vec2(2.1,.5))*(.008);
 
-    float T=time*0.7;
+    float T=time*0.72;
 
     vec3 c = clamp(1.-.58*vec3(
         length(uv-vec2(1.,1)),
