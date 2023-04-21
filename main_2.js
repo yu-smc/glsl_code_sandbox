@@ -272,7 +272,7 @@ window.onload = function () {
   // 有効にするテクスチャユニットを指定
   gl.activeTexture(gl.TEXTURE0);
 
-  create_texture("/textures/text_sample_2.png");
+  create_texture("textures/text_sample_2.png");
   // create_texture("/textures/sample.jpeg");
 
   // その他の初期化
