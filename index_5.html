@@ -1,0 +1,59 @@
+<html><head><title>wgld.org WebGL sample</title><script src="main_5.js" type="text/javascript"></script><script id="fs" type="x-shader/x-fragment">precision mediump float;
+  uniform float time;
+  uniform vec2  mouse;
+  uniform vec2  resolution;
+  uniform sampler2D texture;
+
+  varying vec4 vColor;
+  varying vec2 vTextureCoord;
+
+  vec2 params = vec2(1.5, 5.0);
+
+  //Change here:
+  float speed = 16.; //Speed up time
+  float freq = 80.;
+  float amp = 0.005; //Use small decimal, it's too intense to use integers
+          
+  void main(void){
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+
+    vec2 ripple = vec2(cos((length(uv-0.5)*freq)+(-time*speed)),sin((length(uv-0.5)*freq)+(-time*speed)))*amp;
+
+    gl_FragColor = texture2D(texture,uv+ripple);
+  }
+  </script>
+        
+  <script id="vs" type="x-shader/x-vertex">
+    attribute vec3 position;
+    attribute vec4 color;
+    attribute vec2 textureCoord;
+
+    varying   vec4 vColor;
+    varying   vec2 vTextureCoord;
+    
+    void main(void){
+      vColor = color;
+      vTextureCoord = textureCoord;
+      gl_Position = vec4(position, 1.0);
+    }
+  </script>
+
+  <style type="text/css">
+
+    body {
+height: 100vh;
+overflow: hidden;
+    }
+    canvas {
+        box-shadow: 0px 0px 0px 1px gray;
+        transform: scale(0.5) translateY(-300px);
+        
+    }
+</style>
+        
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <p><input type="checkbox" id="check" checked><label for="check"> auto run</label></p>
+  </body>
+</html>
