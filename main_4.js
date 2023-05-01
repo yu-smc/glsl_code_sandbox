@@ -1,12 +1,3 @@
-// global
-var c, cw, ch, mx, my, gl, run, eCheck;
-var startTime;
-var time = 0.0;
-var tempTime = 0.0;
-var fps = 1000 / 30;
-var uniLocation = new Array();
-let texture;
-
 function create_shader(id) {
   // シェーダを格納する変数
   var shader;
@@ -92,21 +83,6 @@ function create_vbo(data) {
   return vbo;
 }
 
-// VBOをバインドし登録する関数
-function set_attribute(vbo, attL, attS) {
-  // 引数として受け取った配列を処理する
-  for (var i in vbo) {
-    // バッファをバインドする
-    gl.bindBuffer(gl.ARRAY_BUFFER, vbo[i]);
-
-    // attributeLocationを有効にする
-    gl.enableVertexAttribArray(attL[i]);
-
-    // attributeLocationを通知し登録する
-    gl.vertexAttribPointer(attL[i], attS[i], gl.FLOAT, false, 0, 0);
-  }
-}
-
 // IBOを生成する関数
 function create_ibo(data) {
   // バッファオブジェクトの生成
@@ -125,35 +101,13 @@ function create_ibo(data) {
   return ibo;
 }
 
-// テクスチャを生成する関数
-function create_texture(source) {
-  // イメージオブジェクトの生成
-  var img = new Image();
-
-  // データのオンロードをトリガーにする
-  img.onload = function () {
-    // テクスチャオブジェクトの生成
-    var tex = gl.createTexture();
-
-    // テクスチャをバインドする
-    gl.bindTexture(gl.TEXTURE_2D, tex);
-
-    // テクスチャへイメージを適用
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-
-    // ミップマップを生成
-    gl.generateMipmap(gl.TEXTURE_2D);
-
-    // テクスチャのバインドを無効化
-    gl.bindTexture(gl.TEXTURE_2D, null);
-
-    // 生成したテクスチャをグローバル変数に代入
-    texture = tex;
-  };
-
-  // イメージオブジェクトのソースを指定
-  img.src = source;
-}
+// global
+var c, cw, ch, mx, my, gl, run, eCheck;
+var startTime;
+var time = 0.0;
+var tempTime = 0.0;
+var fps = 1000 / 30;
+var uniLocation = new Array();
 
 function render() {
   // フラグチェック
@@ -172,12 +126,6 @@ function render() {
   gl.uniform2fv(uniLocation[1], [mx, my]);
   gl.uniform2fv(uniLocation[2], [cw, ch]);
 
-  // テクスチャをバインドする
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-
-  // uniform変数にテクスチャを登録
-  gl.uniform1i(uniLocation[1], 0);
-
   // 描画
   gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
   gl.flush();
@@ -185,10 +133,6 @@ function render() {
   // 再帰
   setTimeout(render, fps);
 }
-
-// window.addEventListener("wheel", (e) => {
-//   time += Math.abs(e.deltaY * 0.0006);
-// });
 
 // checkbox
 function checkChange(e) {
@@ -213,8 +157,8 @@ window.onload = function () {
   c = document.getElementById("canvas");
 
   // canvas サイズ
-  cw = 1024;
-  ch = 1024;
+  cw = window.innerWidth;
+  ch = window.innerHeight;
   c.width = cw;
   c.height = ch;
 
@@ -237,47 +181,20 @@ window.onload = function () {
   uniLocation[0] = gl.getUniformLocation(prg, "time");
   uniLocation[1] = gl.getUniformLocation(prg, "mouse");
   uniLocation[2] = gl.getUniformLocation(prg, "resolution");
-  uniLocation[3] = gl.getUniformLocation(prg, "texture");
 
   // 頂点データ回りの初期化
-  const position = [-1.0, 1.0, 0.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0];
-  // 頂点色
-  const color = [
-    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-  ];
-
-  // テクスチャ座標
-  const textureCoord = [0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0];
-  const index = [0, 2, 1, 1, 2, 3];
-
-  const vPosition = create_vbo(position);
-  const vColor = create_vbo(color);
-  const vTextureCoord = create_vbo(textureCoord);
-  const VBOList = [vPosition, vColor, vTextureCoord];
-
-  const vIndex = create_ibo(index);
-
-  const attLocation = new Array();
-  attLocation[0] = gl.getAttribLocation(prg, "position");
-  attLocation[1] = gl.getAttribLocation(prg, "color");
-  attLocation[2] = gl.getAttribLocation(prg, "textureCoord");
-
-  const attStride = new Array();
-  attStride[0] = 3;
-  attStride[1] = 4;
-  attStride[2] = 2;
-
-  set_attribute(VBOList, attLocation, attStride);
+  var position = [-1.0, 1.0, 0.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0];
+  var index = [0, 2, 1, 1, 2, 3];
+  var vPosition = create_vbo(position);
+  var vIndex = create_ibo(index);
+  var vAttLocation = gl.getAttribLocation(prg, "position");
+  gl.bindBuffer(gl.ARRAY_BUFFER, vPosition);
+  gl.enableVertexAttribArray(vAttLocation);
+  gl.vertexAttribPointer(vAttLocation, 3, gl.FLOAT, false, 0, 0);
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, vIndex);
 
-  // 有効にするテクスチャユニットを指定
-  gl.activeTexture(gl.TEXTURE0);
-
-  create_texture("textures/text_sample_3.png");
-  // create_texture("/textures/sample.jpeg");
-
   // その他の初期化
-  gl.clearColor(1.0, 1.0, 1.0, 1.0);
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
   mx = 0.5;
   my = 0.5;
   startTime = new Date().getTime();
