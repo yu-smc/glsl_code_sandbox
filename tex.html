@@ -10,6 +10,18 @@
 
     body {}
 
+    @keyframes opacityAnimation {
+
+      0%,
+      100% {
+        opacity: 0.9;
+      }
+
+      50% {
+        opacity: 0.7;
+      }
+    }
+
     canvas {
       position: fixed;
       top: 0;
@@ -17,10 +29,11 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      opacity: 0.7;
+      opacity: 0.9;
       transform: scale(1.2);
       transform-origin: center center;
-      filter: blur(0px);
+      animation: opacityAnimation 30s ease infinite;
+      z-index: 1;
     }
 
     .dummy-ui {
@@ -85,53 +98,75 @@
       blur: <input id="blur" type="range" min="0" max="20" value="0">
     </div>
     <div class="controls_item">
-      opacity: <input id="opacity" type="range" min="0.1" max="1.0" value="0.5" step="0.4">
+      opacity: <input id="opacity" type="range" min="0.1" max="1.0" value="0.5" step="0.1">
     </div>
     <div class="controls_item">
       <button id="copy">COPY</button>
     </div>
   </div>
   <p><input type="checkbox" id="check" checked><label for="check"> auto run</label></p>
-  <script id="fs" type="x-shader/x-fragment">precision mediump float;
+  <script id="fs" type="x-shader/x-fragment">precision highp float;
     uniform vec2 resolution;
     uniform float time;
     uniform float xScale;
     uniform float yScale;
     uniform float distortion;
-    uniform float w1;
-    uniform float w2;
-    uniform float w3;
-    uniform float w4;
-    uniform float w5;
-    uniform float w6;
-
+      
+    float timeSpeed = 1.0;
+    
+    float randomVal (float inVal)
+    {
+        return fract(sin(dot(vec2(inVal, 2523.2361) ,vec2(12.9898,78.233))) * 43758.5453)-0.5;
+    }
+    
+    vec2 randomVec2 (float inVal)
+    {
+        return normalize(vec2(randomVal(inVal), randomVal(inVal+151.523)));
+    }
+    
+    float makeWaves(vec2 uv, float theTime, float offset)
+    {
+        float result = 0.0;
+        float direction = 0.0;
+        float sineWave = 0.0;
+        vec2 randVec = vec2(1.0,0.0);
+        float i;
+        for(int n = 0; n < 13; n++)
+        {
+            i = float(n)+offset;
+            randVec = randomVec2(float(i));
+          direction = (uv.x*randVec.x+uv.y*randVec.y);
+            sineWave = sin(direction*randomVal(i+1.6516)+theTime*timeSpeed);
+            sineWave = smoothstep(0.0,1.0,sineWave);
+          result += randomVal(i+123.0)*sineWave;
+        }
+        return result;
+    }
     
     void main() {
       vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
       
-      float d = length(p) * distortion;
+      float result = 0.0;
+      float result2 = 0.0;
+      float result3 = 0.0;
+      float speed = time * 0.05;
       
-      float rx = p.y * (1.0 + d);
-      float gx = p.y;
-      float bx = p.y * (1.0 - d);
+      p *= 2.;
+      
+      vec3 warp = vec3(makeWaves(p, speed, 0.12), makeWaves(p, speed,0.14), makeWaves(p, speed, 0.154));
+        
+      result = makeWaves( p, speed, 0.1);
+      result2 = makeWaves( p, speed+0.01, 0.1);
+      result3 = makeWaves( p, speed+0.02, 0.3);
     
-      float r1 = w1 / abs(p.x + sin((rx + time * 0.1 + 0.1) * xScale) * yScale);
-      float g1 = w2 / abs(p.x + sin((gx + time * 0.1 + 0.3) * xScale) * yScale);
-      float b1 = w3 / abs(p.x + sin((bx + time * 0.1 + 0.4) * xScale) * yScale);
-
-          
-      float r2 = w4 / abs(p.x + cos((bx + time * 0.1 + 0.2) * xScale) * yScale);
-      float g2 = w5 / abs(p.x + cos((gx + time * 0.1 + 0.2) * xScale) * yScale);
-      float b2 = w6 / abs(p.x + cos((rx + time * 0.1 + 0.9) * xScale) * yScale);
-
-      float r = r1 * 0.4 + r2 * 0.4;
-      float g = g1 * 0.4 + g2 * 0.4;
-      float b = b1 * 0.4 + b2 * 0.4;
-
-      //gaussian blur
+      float r = 1.0-abs(result);
+      float g = 1.0-abs(result2);
+      float b = 1.0-abs(result3);
+      
+      vec3 rgb = vec3(r+0.6,g+0.4,b+0.78)*0.6 + vec3(warp*0.3) + max((r*r*r*r-0.6), 0.0);
       
       
-      gl_FragColor = vec4(r, g, b, 1.0);
+      gl_FragColor = vec4(rgb, 0.9);
     }
   </script><!-- /fragment shader -->
 
@@ -145,7 +180,7 @@
   </script><!-- /vertex shader -->
 
   <script src="ui-controls.js"></script>
-  <script src="prism_param2.js" type="text/javascript"></script>
+  <script src="prism_animated.js" type="text/javascript"></script>
 </body>
 
 </html>
