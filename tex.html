@@ -116,7 +116,7 @@
     
     float randomVal (float inVal)
     {
-        return fract(sin(dot(vec2(inVal, 2523.2361) ,vec2(12.9898,78.233))) * 43758.5453)-0.5;
+        return fract(sin(dot(vec2(inVal, 238.2361) ,vec2(12.9898,78.233))) * 4378.5453)-0.5;
     }
     
     vec2 randomVec2 (float inVal)
@@ -131,7 +131,7 @@
         float sineWave = 0.0;
         vec2 randVec = vec2(1.0,0.0);
         float i;
-        for(int n = 0; n < 13; n++)
+        for(int n = 0; n < 16; n++)
         {
             i = float(n)+offset;
             randVec = randomVec2(float(i));
@@ -151,19 +151,19 @@
       float result3 = 0.0;
       float speed = time * 0.05;
       
-      p *= 2.;
+      p *= 2.32;
       
-      vec3 warp = vec3(makeWaves(p, speed, 0.12), makeWaves(p, speed,0.14), makeWaves(p, speed, 0.154));
+      vec3 warp = vec3(makeWaves(p, speed, 0.14), makeWaves(p, speed,0.15), makeWaves(p, speed, 0.134));
         
       result = makeWaves( p, speed, 0.1);
       result2 = makeWaves( p, speed+0.01, 0.1);
-      result3 = makeWaves( p, speed+0.02, 0.3);
+      result3 = makeWaves( p, speed+0.02, 0.1);
     
       float r = 1.0-abs(result);
       float g = 1.0-abs(result2);
       float b = 1.0-abs(result3);
       
-      vec3 rgb = vec3(r+0.6,g+0.4,b+0.78)*0.6 + vec3(warp*0.3) + max((r*r*r*r-0.6), 0.0);
+      vec3 rgb = vec3(r+0.6,g+0.5,b+0.88)*0.52 + vec3(warp*0.6) + max((r*r*r*r-0.6), 0.);
       
       
       gl_FragColor = vec4(rgb, 0.9);
