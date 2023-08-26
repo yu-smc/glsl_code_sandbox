@@ -109,15 +109,29 @@ var tempTime = 0.0;
 var fps = 1000 / 30;
 var uniLocation = new Array();
 
-let xScale = 2.0;
-let yScale = 0.5;
-let distortion = 0.0;
-let w1 = 0.47;
-let w2 = 0.59;
-let w3 = 0.67;
-let w4 = 0.3;
-let w5 = 0.24;
-let w6 = 0.28;
+const initParamValues = {
+  xScale: 2.0,
+  yScale: 0.5,
+  distortion: 0.0,
+  w1: 0.47,
+  w2: 0.59,
+  w3: 0.67,
+  w4: 0.3,
+  w5: 0.24,
+  w6: 0.28,
+};
+
+const dynamicVals = {
+  xScale: initParamValues.xScale,
+  yScale: initParamValues.yScale,
+  distortion: initParamValues.distortion,
+  w1: initParamValues.w1,
+  w2: initParamValues.w2,
+  w3: initParamValues.w3,
+  w4: initParamValues.w4,
+  w5: initParamValues.w5,
+  w6: initParamValues.w6,
+};
 
 document.getElementById("xScale").addEventListener("input", (e) => {
   xScale = parseFloat(e.target.value);
@@ -172,17 +186,69 @@ copy.addEventListener("click", () => {
     });
 });
 
+let isWheeling = false;
+let hasWheeled = false;
+let currentWheelDeltaY = 0;
+//スクロールしているかのフラグ切り替え
+setInterval(() => {
+  if (hasWheeled) {
+    isWheeling = true;
+  } else {
+    isWheeling = false;
+    currentWheelDeltaY = 0;
+  }
+
+  hasWheeled = false;
+}, 100);
+
+window.addEventListener("wheel", (e) => {
+  hasWheeled = true;
+  currentWheelDeltaY = Math.abs(e.deltaY);
+});
+
+const interactiveAnimationParams = {
+  xScale: [0.0, 0.0],
+  yScale: [0.0, 0.0],
+  distortion: [0.00002, -0.005],
+  w1: [0.0, 0.0],
+  w2: [0.00003, -0.005],
+  w3: [0.00003, -0.005],
+  w4: [0.0, 0.0],
+  w5: [0.00003, -0.005],
+  w6: [0.00003, -0.005],
+};
+
+const updateParams = () => {
+  for (const key in dynamicVals) {
+    const compareF = interactiveAnimationParams[key][1] > 0 ? Math.min : Math.max;
+
+    if (isWheeling) {
+      dynamicVals[key] =
+        dynamicVals[key] + currentWheelDeltaY * interactiveAnimationParams[key][0];
+    } else {
+      dynamicVals[key] = compareF(
+        dynamicVals[key] + interactiveAnimationParams[key][1],
+        initParamValues[key]
+      );
+    }
+  }
+};
+
 function render() {
   // フラグチェック
   if (!run) {
     return;
   }
 
+  updateParams();
+
   // 時間管理
   time = (new Date().getTime() - startTime) * 0.001;
 
   // カラーバッファをクリア
   gl.clear(gl.COLOR_BUFFER_BIT);
+
+  const { xScale, yScale, distortion, w1, w2, w3, w4, w5, w6 } = dynamicVals;
 
   // uniform 関連
   gl.uniform1f(uniLocation[0], time + tempTime);
