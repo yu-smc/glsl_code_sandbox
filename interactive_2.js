@@ -206,6 +206,8 @@ window.addEventListener("wheel", (e) => {
   currentWheelDeltaY = Math.abs(e.deltaY);
 });
 
+const scrollAdjustParam = 1700 / window.innerHeight;
+
 const interactiveAnimationParams = {
   xScale: [0.0, 0.0],
   yScale: [0.0, 0.0],
@@ -220,14 +222,19 @@ const interactiveAnimationParams = {
 
 const updateParams = () => {
   for (const key in dynamicVals) {
-    const compareF = interactiveAnimationParams[key][1] > 0 ? Math.min : Math.max;
+    const compareF =
+      interactiveAnimationParams[key][1] > 0 ? Math.min : Math.max;
 
     if (isWheeling) {
       dynamicVals[key] =
-        dynamicVals[key] + currentWheelDeltaY * interactiveAnimationParams[key][0];
+        dynamicVals[key] +
+        currentWheelDeltaY *
+          interactiveAnimationParams[key][0] *
+          scrollAdjustParam;
     } else {
       dynamicVals[key] = compareF(
-        dynamicVals[key] + interactiveAnimationParams[key][1],
+        dynamicVals[key] +
+          interactiveAnimationParams[key][1] * scrollAdjustParam,
         initParamValues[key]
       );
     }
@@ -330,7 +337,9 @@ window.onload = function () {
   uniLocation[11] = gl.getUniformLocation(prg, "w6");
 
   // 頂点データ回りの初期化
-  var position = [-1.0, 1.0, 0.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0];
+  var position = [
+    -1.0, 1.0, 0.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0,
+  ];
   var index = [0, 2, 1, 1, 2, 3];
   var vPosition = create_vbo(position);
   var vIndex = create_ibo(index);
