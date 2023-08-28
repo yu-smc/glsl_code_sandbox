@@ -106,7 +106,7 @@ var c, cw, ch, mx, my, gl, run, eCheck;
 var startTime;
 var time = 0.0;
 var tempTime = 0.0;
-var fps = 1000 / 30;
+var fps = 1000 / 20;
 var uniLocation = new Array();
 
 const initParamValues = {
@@ -206,18 +206,18 @@ window.addEventListener("wheel", (e) => {
   currentWheelDeltaY = Math.abs(e.deltaY);
 });
 
-const scrollAdjustParam = Math.max(2000 / window.innerHeight, 1);
+const scrollAdjustParam = Math.max(2800 / window.innerHeight, 1);
 
 const interactiveAnimationParams = {
   xScale: [0.0, 0.0],
   yScale: [0.0, -0.0],
-  distortion: [-0.00002, 0.003],
-  w1: [-0.00002, 0.003],
-  w2: [-0.00002, 0.003],
-  w3: [-0.00002, 0.003],
-  w4: [-0.00002, 0.003],
-  w5: [-0.00002, 0.003],
-  w6: [-0.00002, 0.003],
+  distortion: [-0.00002, 0.002],
+  w1: [-0.00002, 0.002],
+  w2: [-0.00002, 0.002],
+  w3: [-0.00002, 0.002],
+  w4: [-0.00002, 0.002],
+  w5: [-0.00002, 0.002],
+  w6: [-0.00002, 0.002],
 };
 
 const updateParams = () => {
