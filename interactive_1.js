@@ -221,6 +221,8 @@ const interactiveAnimationParams = {
 };
 
 const updateParams = () => {
+  console.log(currentWheelDeltaY);
+  const deltaParam = Math.min(currentWheelDeltaY, 300);
   for (const key in dynamicVals) {
     const compareF =
       interactiveAnimationParams[key][1] > 0 ? Math.min : Math.max;
@@ -231,9 +233,7 @@ const updateParams = () => {
       if (key !== "distortion" && dynamicVals[key] <= 0.14) continue;
       dynamicVals[key] =
         dynamicVals[key] +
-        currentWheelDeltaY *
-          interactiveAnimationParams[key][0] *
-          scrollAdjustParam;
+        deltaParam * interactiveAnimationParams[key][0] * scrollAdjustParam;
     } else {
       dynamicVals[key] = compareF(
         dynamicVals[key] +

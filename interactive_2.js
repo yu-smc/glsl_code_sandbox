@@ -211,16 +211,17 @@ const scrollAdjustParam = Math.max(2000 / window.innerHeight, 1);
 const interactiveAnimationParams = {
   xScale: [0.0, 0.0],
   yScale: [0.0, 0.0],
-  distortion: [0.00002, -0.005],
+  distortion: [0.00002, -0.003],
   w1: [0.0, 0.0],
-  w2: [0.00003, -0.005],
-  w3: [0.00003, -0.005],
+  w2: [0.00003, -0.003],
+  w3: [0.00003, -0.003],
   w4: [0.0, 0.0],
-  w5: [0.00003, -0.005],
-  w6: [0.00003, -0.005],
+  w5: [0.00003, -0.003],
+  w6: [0.00003, -0.003],
 };
 
 const updateParams = () => {
+  const deltaParam = Math.min(currentWheelDeltaY, 300);
   for (const key in dynamicVals) {
     const compareF =
       interactiveAnimationParams[key][1] > 0 ? Math.min : Math.max;
@@ -228,9 +229,7 @@ const updateParams = () => {
     if (isWheeling) {
       dynamicVals[key] =
         dynamicVals[key] +
-        currentWheelDeltaY *
-          interactiveAnimationParams[key][0] *
-          scrollAdjustParam;
+        deltaParam * interactiveAnimationParams[key][0] * scrollAdjustParam;
     } else {
       dynamicVals[key] = compareF(
         dynamicVals[key] +
