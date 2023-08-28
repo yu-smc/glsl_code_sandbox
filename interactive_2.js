@@ -191,7 +191,7 @@ let hasWheeled = false;
 let currentWheelDeltaY = 0;
 //スクロールしているかのフラグ切り替え
 setInterval(() => {
-  if (hasWheeled) {
+  if (hasWheeled && currentWheelDeltaY > 30) {
     isWheeling = true;
   } else {
     isWheeling = false;

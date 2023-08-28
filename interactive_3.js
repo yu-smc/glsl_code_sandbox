@@ -189,9 +189,10 @@ copy.addEventListener("click", () => {
 let isWheeling = false;
 let hasWheeled = false;
 let currentWheelDeltaY = 0;
+let prevWheelDeltaY = 0;
 //スクロールしているかのフラグ切り替え
 setInterval(() => {
-  if (hasWheeled) {
+  if (hasWheeled && currentWheelDeltaY > 30) {
     isWheeling = true;
   } else {
     isWheeling = false;
@@ -210,14 +211,14 @@ const scrollAdjustParam = Math.max(2000 / window.innerHeight, 1);
 
 const interactiveAnimationParams = {
   xScale: [0.0, 0.0],
-  yScale: [-0.00008, 0.02],
+  yScale: [-0.00008, 0.005],
   distortion: [0.0, 0.0],
-  w1: [-0.00002, 0.005],
-  w2: [-0.00002, 0.005],
-  w3: [-0.00002, 0.005],
-  w4: [-0.00002, 0.005],
-  w5: [-0.00002, 0.005],
-  w6: [-0.00002, 0.005],
+  w1: [-0.00002, 0.003],
+  w2: [-0.00002, 0.003],
+  w3: [-0.00002, 0.003],
+  w4: [-0.00002, 0.003],
+  w5: [-0.00002, 0.003],
+  w6: [-0.00002, 0.003],
 };
 
 const updateParams = () => {
