@@ -211,13 +211,13 @@ const scrollAdjustParam = Math.max(2000 / window.innerHeight, 1);
 const interactiveAnimationParams = {
   xScale: [0.0, 0.0],
   yScale: [0.0, 0.0],
-  distortion: [0.00002, -0.002],
+  distortion: [0.00004, -0.002],
   w1: [0.0, 0.0],
-  w2: [0.00003, -0.002],
-  w3: [0.00003, -0.002],
+  w2: [0.00004, -0.002],
+  w3: [0.00004, -0.002],
   w4: [0.0, 0.0],
-  w5: [0.00003, -0.002],
-  w6: [0.00003, -0.002],
+  w5: [0.00004, -0.002],
+  w6: [0.00004, -0.002],
 };
 
 const updateParams = () => {
