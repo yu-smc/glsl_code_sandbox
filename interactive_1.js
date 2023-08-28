@@ -206,18 +206,18 @@ window.addEventListener("wheel", (e) => {
   currentWheelDeltaY = Math.abs(e.deltaY);
 });
 
-const scrollAdjustParam = 1800 / window.innerHeight;
+const scrollAdjustParam = Math.max(2000 / window.innerHeight, 1);
 
 const interactiveAnimationParams = {
   xScale: [0.0, 0.0],
   yScale: [0.0, -0.0],
-  distortion: [-0.00002, 0.005],
-  w1: [-0.00002, 0.002],
-  w2: [-0.00002, 0.002],
-  w3: [-0.00002, 0.002],
-  w4: [-0.00002, 0.002],
-  w5: [-0.00002, 0.002],
-  w6: [-0.00002, 0.002],
+  distortion: [-0.00002, 0.003],
+  w1: [-0.00002, 0.003],
+  w2: [-0.00002, 0.003],
+  w3: [-0.00002, 0.003],
+  w4: [-0.00002, 0.003],
+  w5: [-0.00002, 0.003],
+  w6: [-0.00002, 0.003],
 };
 
 const updateParams = () => {
@@ -226,6 +226,9 @@ const updateParams = () => {
       interactiveAnimationParams[key][1] > 0 ? Math.min : Math.max;
 
     if (isWheeling) {
+      console.log(dynamicVals.w1);
+      //info tmmp
+      if (key !== "distortion" && dynamicVals[key] <= 0.14) continue;
       dynamicVals[key] =
         dynamicVals[key] +
         currentWheelDeltaY *

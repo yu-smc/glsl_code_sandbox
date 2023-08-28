@@ -206,7 +206,7 @@ window.addEventListener("wheel", (e) => {
   currentWheelDeltaY = Math.abs(e.deltaY);
 });
 
-const scrollAdjustParam = 2000 / window.innerHeight;
+const scrollAdjustParam = Math.max(2000 / window.innerHeight, 1);
 
 const interactiveAnimationParams = {
   xScale: [0.0, 0.0],
